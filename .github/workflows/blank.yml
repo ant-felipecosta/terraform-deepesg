@@ -1,4 +1,4 @@
-name: Deploy to ECR
+name: Deploy to ECR and Terraform
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: Build Image
+    name: Build Image and Deploy Infrastructure
     runs-on: ubuntu-latest
 
     steps:
@@ -42,17 +42,16 @@ jobs:
         docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Dockerfile.backend .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-
-  - name: Set up Terraform
+    - name: Set up Terraform
       uses: hashicorp/setup-terraform@v1
       with:
         terraform_version: 1.5.2
 
-  - name: Terraform Init
-    run: terraform init
+    - name: Terraform Init
+      run: terraform init
 
-  - name: Terraform Plan
-    run: terraform plan
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - name: Terraform Plan
+      run: terraform plan
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
