@@ -2,8 +2,15 @@ resource "aws_security_group" "allow_tls" {
   vpc_id = var.vpc-id
 
   ingress {
-    from_port   = [80,81]
+    from_port   = 80
     to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    ingress {
+    from_port   = 81
+    to_port     = 81
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
