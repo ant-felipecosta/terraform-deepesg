@@ -83,7 +83,7 @@ resource "aws_eip" "nat_b" {
 resource "aws_nat_gateway" "nat-a" {
   connectivity_type = "public"
   allocation_id     = aws_eip.nat_a.id
-  subnet_id         = aws_subnet.subnet-private-a.id
+  subnet_id         = aws_subnet.subnet-public-a.id
 
   tags = {
     Name = "NAT-GW-A"
@@ -93,7 +93,7 @@ resource "aws_nat_gateway" "nat-a" {
 resource "aws_nat_gateway" "nat-b" {
   connectivity_type = "public"
   allocation_id     = aws_eip.nat_b.id
-  subnet_id         = aws_subnet.subnet-private-b.id
+  subnet_id         = aws_subnet.subnet-public-b.id
 
   tags = {
     Name = "NAT-GW-B"
