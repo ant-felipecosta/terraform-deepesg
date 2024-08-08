@@ -31,12 +31,12 @@ jobs:
 
       - name: Build, tag, and push Docker image for app1
         run: |
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/app1:latest -f Dockerfile.app1 .
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/app1:latest -f Dockerfile.frontend .
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/app1:latest
 
       - name: Build, tag, and push Docker image for app2
         run: |
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/app2:latest -f Dockerfile.app2 .
+          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/app2:latest -f Dockerfile.backend .
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/app2:latest
 
       - name: Download Terraform
