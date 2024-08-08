@@ -23,13 +23,13 @@ module "vpc-main" {
 }
 
 module "ecs-cluster" {
-  source = "./modules/fargate"
-    private-subnets = module.vpc-main.subnets_private
-  public-subnets  = module.vpc-main.subnets_public
-  vpc-id          = module.vpc-main.vpc_id
-
-  
-  cluster-name    = "clusterdeepesg"
+  source            = "./modules/fargate"
+  private-subnets   = module.vpc-main.subnets_private
+  public-subnets    = module.vpc-main.subnets_public
+  vpc-id            = module.vpc-main.vpc_id
+  docker_image_app1 = "frontend"
+  docker_image_app2 = "backend"
+  cluster-name      = "clusterdeepesg"
 
   albname = "ALB-DEEPESG"
 
