@@ -1,0 +1,15 @@
+[
+  {
+    "name": "app",
+    "image": "772767048757.dkr.ecr.us-east-1.amazonaws.com/my-repo:latest",
+    "cpu": 256,
+    "memory": 512,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 80,
+        "hostPort": 80
+      }
+    ]
+  }
+]
