@@ -61,6 +61,7 @@ resource "aws_lb_target_group" "app1" {
   port     = 3000
   protocol = "HTTP"
   vpc_id   = var.vpc-id
+  target_type = "ip"
 }
 
 resource "aws_lb_target_group" "app2" {
@@ -68,6 +69,7 @@ resource "aws_lb_target_group" "app2" {
   port     = 5000
   protocol = "HTTP"
   vpc_id   = var.vpc-id
+  target_type = "ip"
 }
 
 resource "aws_lb_listener" "app1" {
@@ -111,7 +113,8 @@ resource "aws_ecs_task_definition" "app1" {
     "portMappings": [
       {
         "containerPort": 3000,
-        "hostPort": 3000
+        "hostPort": 3000,
+        "protocol": http
       }
     ]
   }
@@ -134,7 +137,8 @@ resource "aws_ecs_task_definition" "app2" {
     "portMappings": [
       {
         "containerPort": 5000,
-        "hostPort": 5000
+        "hostPort": 5000,
+        "protocol": http
       }
     ]
   }
