@@ -114,7 +114,7 @@ resource "aws_ecs_task_definition" "app1" {
       {
         "containerPort": 3000,
         "hostPort": 3000,
-        "protocol": http
+        "protocol": "http"
       }
     ]
   }
@@ -138,7 +138,7 @@ resource "aws_ecs_task_definition" "app2" {
       {
         "containerPort": 5000,
         "hostPort": 5000,
-        "protocol": http
+        "protocol": "http"
       }
     ]
   }
