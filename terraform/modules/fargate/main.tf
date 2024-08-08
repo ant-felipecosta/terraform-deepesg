@@ -85,7 +85,7 @@ resource "aws_lb_listener" "app1" {
 
 resource "aws_lb_listener" "app2" {
   load_balancer_arn = aws_lb.main.arn
-  port              = "80"
+  port              = "81"
   protocol          = "HTTP"
 
   default_action {
