@@ -1,5 +1,5 @@
 resource "aws_security_group" "allow_tls" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = var.vpc-id
 
   ingress {
     from_port   = 80
