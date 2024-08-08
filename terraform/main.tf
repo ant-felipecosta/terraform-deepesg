@@ -32,8 +32,8 @@ module "ecs-cluster" {
   private-subnets   = module.vpc-main.subnets_private
   public-subnets    = module.vpc-main.subnets_public
   vpc-id            = module.vpc-main.vpc_id
-  docker_image_app1 = "frontend"
-  docker_image_app2 = "backend"
+  docker_image_app1 = "772767048757.dkr.ecr.us-east-1.amazonaws.com/app1"
+  docker_image_app2 = "772767048757.dkr.ecr.us-east-1.amazonaws.com/app2"
   cluster-name      = "clusterdeepesg"
 
   albname = "ALB-DEEPESG"
