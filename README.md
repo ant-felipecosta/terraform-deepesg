@@ -1,60 +1,42 @@
-## Teste Técnico Cloud Engineer
+Deploy Automatizado com Terraform, ECS e GitHub Actions
+Este repositório contém uma aplicação web dividida em frontend e backend, que é provisionada e gerenciada usando Terraform, e implantada em um cluster ECS (Elastic Container Service) da AWS utilizando GitHub Actions para CI/CD.
 
-Este repositório contém o código de um pequeno app de lista de tarefas. As instruções para rodar essa aplicação utilizando Docker seguem abaixo. O teste em si está no último item desse README, mas recomendamos que tente rodar a aplicação localmente antes seguindo os passos abaixo.
+Pré-requisitos
+AWS CLI - Instale e configure a AWS CLI com suas credenciais AWS.
+Terraform - Instale a última versão do Terraform.
+Docker - Certifique-se de ter o Docker instalado e em execução.
+GitHub Actions - Configure as secrets necessárias para integração com a AWS.
+Passos para Configuração
+1. Configuração do S3 Bucket para Backend do Terraform
+Criar um bucket S3 para armazenar o estado do Terraform:
 
-<!--ts-->
-  * [Pré-requisitos](#prerequisites)
-  * [Build local](#build)
-  * [Deploy local](#deploy)
-  * [Teste técnico](#test)
-<!--te-->
+2.Vá para Settings > Secrets and variables > Actions > New repository secret.
+Configuração das Secrets no GitHub
+Navegue até a página do seu repositório no GitHub.
 
-### Pré-requisitos<a name="prerequisites"></a>
+Adicione as seguintes secrets:
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+AWS_REGION (valor: us-east-1)
 
-- Docker
-- Linux (de preferência, mas não obrigatório)
+3. Configuração do GitHub Actions
+O GitHub Actions está configurado para automaticamente construir, testar e implantar a aplicação no ECS sempre que houver um push na branch main.
 
-### Build local<a name="build"></a>
 
-Para você se familiarizar com a aplicação, utilizamos Docker para simplificar o build e deploy do frontend e backend na sua máquina. A partir do seu terminal, execute os seguintes comandos:
 
-```bash
-cd cloud-engineer-test-app
-```
+5. Deploy Manual (opcional)
+Se precisar executar o Terraform manualmente, siga os passos abaixo:
 
-```bash
-docker build -t teste-backend -f Dockerfile.backend ./backend
-```
+Clone o repositório
+Inicialize o Terraform:
+terraform init
 
-```bash
-docker build -t teste-frontend -f Dockerfile.frontend ./frontend
-``` 
+Planeje a infraestrutura:
+terraform plan
+Após confirmar todas as informações do terraform plan siga para o próximo passo.
 
-### Deploy local<a name="deploy"></a>
+Aplique as mudanças:
+terraform apply --auto-approve
 
-```bash
-docker run -d -p5500:5500 teste-backend
-```
-
-```bash
-docker run -d -p3000:3000 teste-frontend
-``` 
-
-Para verificar se deu certo, rode o comando `docker ps`. Resultado deve ser parecido com esse:
-
-```bash
-❯ docker ps
-CONTAINER ID   IMAGE            COMMAND                  CREATED          STATUS          PORTS                                       NAMES
-6ac59bbf1ffb   teste-backend    "docker-entrypoint.s…"   20 minutes ago   Up 20 minutes   0.0.0.0:5500->5500/tcp, :::5500->5500/tcp   hardcore_mccarthy
-730c6eabc5cd   teste-frontend   "docker-entrypoint.s…"   23 minutes ago   Up 23 minutes   0.0.0.0:3000->3000/tcp, :::3000->3000/tcp   wizardly_pasteur
-```
-
-No seu navegador, acesse `http://localhost:3000`, você deverá visualizar a seguinte tela:
-
-<p align="center">
-  <a href="http://deepesg.com/" target="blank"><img src="https://snipboard.io/tnBXDd.jpg" /></a>
-</p>
-
-### Teste Técnico<a name="test"></a>
-
-Feito o deploy da aplicação, siga as instruções do PDF enviado para execução do teste técnico. Lembrando que apenas a primeira atividade é obrigatória.
+6. Acessando a Aplicação
+Após a execução do Terraform, a aplicação será acessível via o ALB configurado. Você pode verificar o URL público do ALB diretamente no console da AWS.
