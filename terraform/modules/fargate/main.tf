@@ -112,13 +112,56 @@ resource "aws_ecs_cluster" "main" {
   name = var.cluster-name
 }
 
-resource "aws_ecs_task_definition" "app1" {
-  family                   = "app1-task"
-  network_mode             = "awsvpc"
-  requires_compatibilities = ["FARGATE"]
-  cpu                      = "256"
-  memory                   = "512"
+resource "aws_iam_role" "ecs_execution_role" {
+  name = "ecs_execution_role"
 
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_policy" "ecs_execution_policy" {
+  name        = "ecs_execution_policy"
+  description = "ECS execution policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_execution_policy_attachment" {
+  role       = aws_iam_role.ecs_execution_role.name
+  policy_arn  = aws_iam_policy.ecs_execution_policy.arn
+}
+
+
+resource "aws_ecs_task_definition" "app1" {
+  family                = "app1-task"
+  execution_role_arn    = aws_iam_role.ecs_execution_role.arn
+  network_mode          = "awsvpc"
   container_definitions = <<DEFINITION
 [
   {
@@ -128,21 +171,21 @@ resource "aws_ecs_task_definition" "app1" {
       {
         "containerPort": 3000,
         "hostPort": 3000,
-        "protocol": "http"
+        "protocol": "tcp"
       }
     ]
   }
 ]
 DEFINITION
-}
-
-resource "aws_ecs_task_definition" "app2" {
-  family                   = "app2-task"
-  network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"
   memory                   = "512"
+}
 
+resource "aws_ecs_task_definition" "app2" {
+  family                = "app2-task"
+  execution_role_arn    = aws_iam_role.ecs_execution_role.arn
+  network_mode          = "awsvpc"
   container_definitions = <<DEFINITION
 [
   {
@@ -152,13 +195,17 @@ resource "aws_ecs_task_definition" "app2" {
       {
         "containerPort": 5000,
         "hostPort": 5000,
-        "protocol": "http"
+        "protocol": "tcp"
       }
     ]
   }
 ]
 DEFINITION
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "256"
+  memory                   = "512"
 }
+
 
 resource "aws_ecs_service" "app1" {
   name            = "app1-service"
